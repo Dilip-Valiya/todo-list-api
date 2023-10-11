@@ -1,4 +1,4 @@
-const taskStore = require('../store/taskStore');
+const taskStore = require("../store/taskStore");
 
 class TaskService {
   async getTasks() {
