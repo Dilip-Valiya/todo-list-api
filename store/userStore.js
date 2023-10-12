@@ -56,22 +56,12 @@ class UserStore {
     }
   }
 
-  async editUser(name, email, id) {
+  async editUser(name, email, id, now) {
     try {
-      if (!Number(id)) {
-        throw new Error("Id is not valid");
-      }
-
-      if (!name || !email) {
-        throw new Error("Name and email are required fields");
-      }
-
-      const now = new Date();
       const { rows } = await pool.query(
         "UPDATE users SET name = $1, email = $2, updatedAt = $3 WHERE id = $4 RETURNING id, name, email, createdAt, updatedAt",
         [name, email, now, id]
       );
-
       return rows[0];
     } catch (error) {
       throw error;

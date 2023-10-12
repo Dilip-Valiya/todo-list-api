@@ -32,42 +32,24 @@ class TaskStore {
     }
   }
 
-  async addTask(title, description, user_id) {
+  async addTask(title, description, user_id, now) {
     try {
-      if (!title || !user_id) {
-        throw new Error("title and user_id are required fields");
-      }
-
-      try {
-        await pool.query("SELECT id, name FROM users WHERE id = $1", [user_id]);
-      } catch (error) {
-        throw new Error("No user Found with given user_id");
-      }
-
-      const now = new Date();
       const { rows } = await pool.query(
         "INSERT INTO tasks (title, description, user_id, createdAt, updatedAt) VALUES ($1, $2, $3, $4, $4) RETURNING id, title, description, user_id, createdAt, updatedAt",
         [title, description, user_id, now]
       );
-
       return rows[0];
     } catch (error) {
       throw error;
     }
   }
 
-  async editTask(title, description, id) {
+  async editTask(title, description, id, now) {
     try {
-      if (!title || !id) {
-        throw new Error("title and user_id are required fields");
-      }
-
-      const now = new Date();
       const { rows } = await pool.query(
         "UPDATE tasks SET title = $1, description = $2, updatedAt = $3 WHERE id = $4 RETURNING id, title, description, user_id, createdAt, updatedAt",
         [title, description, now, id]
       );
-
       return rows[0];
     } catch (error) {
       throw error;
